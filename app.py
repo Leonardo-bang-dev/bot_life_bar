@@ -22,7 +22,7 @@ def add(date):
 
     attribute_dict['Life'] = life
     attribute_dict['Energ'] = energ
-    player_dict[name] = attribute_dict
+    player_dict[name] = attribute_dict.copy()
     print(player_dict)
 
 
@@ -44,16 +44,16 @@ def show(name):
                 if a < int(life[1]):
                     life_bar += '█ '
                 else:
-                    life_bar += '▓ '
+                    life_bar += '░ '
 
             for a in range(0, energ[0]):
                 if a < int(energ[1]):
                     energ_bar += '█ '
                 else:
-                    energ_bar += '▓ '
+                    energ_bar += '░ '
 
             lifes_bars.append(life_bar)
-            energs_bars.append(energs_bars)
+            energs_bars.append(energ_bar)
 
         return names, lifes_bars, energs_bars
 
@@ -64,14 +64,14 @@ def show(name):
             if a < int(life[1]):
                 life_bar += '█ '
             else:
-                life_bar += '▓ '
+                life_bar += '░ '
 
         for a in range(0, energ[0]):
             if a < int(energ[1]):
                 energ_bar += '█ '
             else:
-                energ_bar += '▓ '
-        return life_bar, energ_bar
+                energ_bar += '░ '
+        return name, life_bar, energ_bar
 
 
 def sub(data):
@@ -80,10 +80,31 @@ def sub(data):
         player_dict[data[1]]['Life'][1] = player_dict[data[1]
                                                       ]['Life'][1] - int(data[2])
     if data[0] == 'energ':
-        player_dict[data[1]]['energ'][1] = player_dict[data[1]
-                                                       ]['energ'][1] - int(data[2])
+        player_dict[data[1]]['Energ'][1] = player_dict[data[1]
+                                                       ]['Energ'][1] - int(data[2])
     print(player_dict)
     return 'executado com sucesso!'
+
+
+def adi(data):
+    resp = ''
+    data = data.split(' ')
+    if data[0] == 'life'and player_dict[data[1]]['Life'][1] < player_dict[data[1]]['Life'][0]:
+        player_dict[data[1]]['Life'][1] = player_dict[data[1]
+                                                      ]['Life'][1] + int(data[2])
+        resp = 'Executado com sucesso!'
+    else: 
+        resp = 'Falha ao executar!'
+
+    if data[0] == 'energ'and player_dict[data[1]]['Energ'][1] < player_dict[data[1]]['Energ'][0]:
+        player_dict[data[1]]['Energ'][1] = player_dict[data[1]
+                                                       ]['Energ'][1] + int(data[2])
+        resp = 'Executado com sucesso!'
+    else: 
+        resp = 'Falha ao executar!'
+
+    print(player_dict)
+    return resp
 
 
 intents = discord.Intents.all()
@@ -112,25 +133,52 @@ async def add_(ctx, *expression, amount=100):
 
 
 @bot.command(name='show')
-async def show_(ctx, *expression):
+async def show_(ctx, *expression, amount=100):
     expression = ''.join(expression)
+    await ctx.channel.purge(limit=amount)
     if expression == 'all':
-        bar = show('all')
+        bar = show(expression)
         for a in range(0, len(bar[0])):
-            await ctx.send(f'{bar[0][a]}')
-            await ctx.send(f'Life: {bar[1][a]}')
-            await ctx.send(f'Energ: {bar[2][a]}')
+            await ctx.send('-----------------------------------------------------------------')
+            await ctx.send(f'**⌠{bar[0][a]}⌡**')
+            await ctx.send(f'Life:     ╣ {bar[1][a]}╠')
+            await ctx.send(f'Energ: ╣ {bar[2][a]}╠')
     else:
-        life_bar = show(expression)
-        await ctx.send(f'{expression}: | {life_bar}|')
+        bar = show(expression)
+        await ctx.send('-----------------------------------------------------------------')
+        await ctx.send(f'**⌠{bar[0]}⌡**')
+        await ctx.send(f'Life:     ╣ {bar[1]}╠')
+        await ctx.send(f'Energ: ╣ {bar[2]}╠')
 
 
 @bot.command(name='sub')
-async def sub_(ctx, *expression):
+async def sub_(ctx, *expression, amount=100):
     expression = ' '.join(expression)
     print(expression)
     resp = sub(expression)
     await ctx.send(resp)
+    await ctx.channel.purge(limit=amount)
 
+    bar = show('all')
+    for a in range(0, len(bar[0])):
+        await ctx.send('-----------------------------------------------------------------')
+        await ctx.send(f'**⌠{bar[0][a]}⌡**')
+        await ctx.send(f'Life:     ╣ {bar[1][a]}╠')
+        await ctx.send(f'Energ: ╣ {bar[2][a]}╠')
 
-bot.run('MTAyMzk5Nzc1ODQzODM4Nzc4NA.Gc-7SI.qlJh8KHDG_m-9TesDrC90Qc3PyLo0NJ6VATbH4')
+@bot.command(name='adi')
+async def sub_(ctx, *expression, amount=100):
+    expression = ' '.join(expression)
+    print(expression)
+    resp = adi(expression)
+    await ctx.send(resp)
+    await ctx.channel.purge(limit=amount)
+
+    bar = show('all')
+    for a in range(0, len(bar[0])):
+        await ctx.send('-----------------------------------------------------------------')
+        await ctx.send(f'**⌠{bar[0][a]}⌡**')
+        await ctx.send(f'Life:     ╣ {bar[1][a]}╠')
+        await ctx.send(f'Energ: ╣ {bar[2][a]}╠')
+
+bot.run('MTAyMzk5Nzc1ODQzODM4Nzc4NA.GYPO0G.QjTtIuwDWvv5zpV-peK4cp_0YbbxkGpRXOwNIU')

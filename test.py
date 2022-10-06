@@ -8,7 +8,10 @@ attribute_dict = dict()
 
 def add(date):
     date = date.split(' ')
+
+    # format name
     name = date[0]
+
     # format life
     life = str(date[1])
     life = life.split('/')
@@ -21,8 +24,8 @@ def add(date):
 
     attribute_dict['Life'] = life
     attribute_dict['Energ'] = energ
-    player_dict[name] = attribute_dict
-    # print(player_dict)
+    player_dict[name] = attribute_dict.copy()
+    #print(player_dict)
 
 
 def show(name):
@@ -52,7 +55,7 @@ def show(name):
                     energ_bar += '▓ '
 
             lifes_bars.append(life_bar)
-            energs_bars.append(energs_bars)
+            energs_bars.append(energ_bar)
 
         return names, lifes_bars, energs_bars
 
@@ -82,11 +85,17 @@ def sub_(data):
         player_dict[data[1]]['energ'][1] = player_dict[data[1]
                                                        ]['energ'][1] - int(data[2])
 
-
+var = 'all'
 add('Jaffry 14/14 12/12')
 add('Salomão 10/10 15/15')
 add('Alastor 12/12 10/10')
-bar = show('all')
-for a in range(0, len(bar[0])):
-    print(f'{bar[0][a]}: {bar[1][a]}')
-    print(f'    {bar[2][a]}')
+
+if var == 'all':
+    bar = show(var)
+    for a in range(0, len(bar[0])):
+            print('')
+            print(f'**⌠{bar[0][a]}⌡**')
+            print(f'Life: ╣{bar[1][a]}╠')
+            print(f'Energ: ╣{bar[2][a]}╠')
+
+
